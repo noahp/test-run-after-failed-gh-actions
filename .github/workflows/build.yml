@@ -33,10 +33,10 @@ jobs:
 
   run-after-build:
     needs: build
-    if: ${{ failure() }}
     runs-on: ubuntu-latest
     steps:
       - name: print job statuses
+        if: ${{ contains(needs.*.result, 'failure') }}
         run: |
           echo "Jobs status: ${{ toJson(needs) }}"
           echo "Job status: ${{ toJson(job) }}"
