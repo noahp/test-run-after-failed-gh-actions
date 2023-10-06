@@ -27,6 +27,8 @@ jobs:
             false
           else
             echo "14.x"
+            # sleep for a while so fail-fast can cancel this job
+            sleep 30
           fi
 
   run-after-build:
