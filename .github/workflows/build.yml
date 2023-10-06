@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: print job statuses
-        if: ${{ contains(needs.*.result, 'failure') }}
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'skipped') || contains(needs.*.result, 'cancelled')
         run: |
           echo "Jobs status: ${{ toJson(needs) }}"
           echo "Job status: ${{ toJson(job) }}"
