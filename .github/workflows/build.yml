@@ -17,7 +17,7 @@ jobs:
       matrix:
         example: [12.x, 14.x]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: test
         run: |
@@ -38,6 +38,5 @@ jobs:
     steps:
       - name: print job statuses
         run: |
-          echo "build job status: ${{ job.status }}"
-          echo "build job conclusion: ${{ job.conclusion }}"
-          echo "build job outcome: ${{ job.outcome }}"
+          echo "Jobs status: ${{ toJson(needs) }}"
+          echo "Job status: ${{ toJson(job) }}"
