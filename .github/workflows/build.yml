@@ -1,0 +1,41 @@
+# Example showing a matrix job and a run-after-build job that only runs if
+# there's a failure
+
+
+name: Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        example: [12.x, 14.x]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: test
+        run: |
+          echo "testing ${{ matrix.example }}"
+          if [ "${{ matrix.example }}" = "12.x" ]; then
+            echo "12.x"
+            false
+          else
+            echo "14.x"
+          fi
+
+  run-after-build:
+    needs: build
+    if: ${{ failure() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: print job statuses
+        run: |
+          echo "build job status: ${{ job.status }}"
+          echo "build job conclusion: ${{ job.conclusion }}"
+          echo "build job outcome: ${{ job.outcome }}"
