@@ -13,31 +13,19 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        example: [12.x, 14.x]
-    steps:
-      - uses: actions/checkout@v3
 
-      - name: test
-        run: |
-          echo "testing ${{ matrix.example }}"
-          if [ "${{ matrix.example }}" = "12.x" ]; then
-            echo "12.x"
-            false
-          else
-            echo "14.x"
-            # sleep for a while so fail-fast can cancel this job
-            sleep 30
-          fi
-
-  run-after-build:
-    needs: build
-    runs-on: ubuntu-latest
-    if: always()
     steps:
-      - name: print job statuses
-        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'skipped') || contains(needs.*.result, 'cancelled')
+      - name: Install CMSIS Toolbox
         run: |
-          echo "Jobs status: ${{ toJson(needs) }}"
-          echo "Job status: ${{ toJson(job) }}"
+          wget https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/2.1.0/cmsis-toolbox-linux-amd64.tar.gz
+          tar -xvzf cmsis-toolbox-linux-amd64.tar.gz
+          echo ${PWD}/cmsis-toolbox-linux-amd64/bin >> $GITHUB_PATH
+          cpackget --version
+
+      - name: Install Memfault CMSIS Pack
+        run: |
+          echo $PATH
+          # note: installing the non-https pidx, their cert is expired
+          cpackget init https://www.keil.com/pack/index.pidx
+          cpackget add --verbose --agree-embedded-license Memfault::FirmwareSDK
+          cpackget list
