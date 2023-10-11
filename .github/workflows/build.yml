@@ -20,7 +20,7 @@ jobs:
           wget https://github.com/Open-CMSIS-Pack/cmsis-toolbox/releases/download/2.1.0/cmsis-toolbox-linux-amd64.tar.gz
           tar -xvzf cmsis-toolbox-linux-amd64.tar.gz
           echo ${PWD}/cmsis-toolbox-linux-amd64/bin >> $GITHUB_PATH
-          cpackget --version
+          ./cmsis-toolbox-linux-amd64/bin/cpackget --version
 
       - name: Install Memfault CMSIS Pack
         run: |
